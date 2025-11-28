@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Survivor's Guide | For Stav Reuven</title>
@@ -32,7 +31,7 @@
             color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
         h1, h2, h3, h4 {
@@ -70,31 +69,52 @@
             padding: 0.5rem 1rem;
             border: 1px solid transparent;
             border-radius: 4px;
+            cursor: pointer;
         }
 
-        .nav-item:hover {
+        .nav-item:hover, .nav-item.active-link {
             background: rgba(255,255,255,0.3);
             border-color: rgba(255,255,255,0.5);
             transform: translateY(-2px);
         }
 
-        /* --- COMMON ANIMATIONS --- */
-        .hidden {
+        /* --- VISIBILITY / SECTION LOGIC --- */
+        
+        /* 1. Hide all main sections by default */
+        section {
+            display: none;
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        .show {
-            opacity: 1;
-            transform: translateY(0);
+            animation: fadeIn 0.6s ease-forwards;
         }
 
-        /* --- HERO SECTION --- */
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* 2. Display Logic for Active Sections */
+        
+        /* Default Block display for Guide & Lifelines */
+        section.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Specific Grid display for Home & Moon */
+        section#home.active {
+            display: grid;
+        }
+        section#moon.active {
+            display: grid;
+        }
+
+
+        /* --- HERO SECTION (HOME) --- */
         .hero {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 2rem;
-            display: grid;
+            /* Note: display: grid is applied via #home.active above */
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
             align-items: center;
@@ -129,7 +149,6 @@
 
         .heart-icon {
             color: #fff;
-            /* font-size: 2rem; */
             text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
@@ -231,17 +250,41 @@
         }
         .tab-content.active { display: block; }
 
+        /* --- UPDATED LIST BOX (SCROLLABLE) --- */
         .list-box {
             background: rgba(255,255,255,0.5);
             padding: 1.5rem;
             border-radius: 4px;
             border: 1px solid rgba(0,0,0,0.05);
+            /* SCROLL PROPERTIES */
+            max-height: 15.5rem; 
+            overflow-y: auto;    
+            padding-right: 8px;  
+        }
+        
+        .list-box ul {
+            margin: 0;
+            padding-left: 20px; 
+            list-style: none; /* Reset logic handled below */
         }
         
         .list-box ul li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             padding-left: 1rem;
             border-left: 3px solid var(--primary-blue);
+        }
+
+        /* Custom Scrollbar for List Box */
+        .list-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .list-box::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        .list-box::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
         }
 
         /* --- LIFELINES (GRID) --- */
@@ -293,7 +336,7 @@
             max-width: 1200px;
             margin: 4rem auto;
             padding: 2rem;
-            display: grid;
+            /* Note: display: grid is applied via #moon.active above */
             grid-template-columns: 1fr 2fr;
             gap: 3rem;
         }
@@ -374,17 +417,25 @@
             padding: 2rem;
             font-size: 0.8rem;
             opacity: 0.7;
+            /* position: fixed; */
+            bottom: 0;
+            width: 100%;
+            pointer-events: none; /* Lets you click through to content behind it if needed */
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1) rotate(-2deg); } }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            .hero { grid-template-columns: 1fr; text-align: center; }
-            .memory-section { grid-template-columns: 1fr; }
+            /* Force Grid to single column on mobile */
+            section#home.active { display: grid; grid-template-columns: 1fr; text-align: center; }
+            section#moon.active { display: grid; grid-template-columns: 1fr; }
+            
             .nav-links { gap: 1rem; }
             .hero-content h1 { font-size: 2rem; }
+            
+            /* Unfix footer on small screens if content is long */
+            footer { position: relative; }
         }
     </style>
 </head>
@@ -395,31 +446,33 @@
         <div class="nav-links">
             <a href="#home" class="nav-item">HOME</a>
             <a href="#guide" class="nav-item">A SURVIVOR'S GUIDE</a>
-            <a href="#lifelines" class="nav-item">LIFELINES: PHONE NUMBERS</a>
+            <a href="#lifelines" class="nav-item">LIFELINES</a>
             <a href="#moon" class="nav-item">TO THE MOON AND BACK</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section id="home" class="hero hidden">
+    <!-- HERO SECTION (HOME) -->
+    <!-- Added ID 'home' and class 'hero' -->
+    <section id="home" class="hero">
         <div class="hero-img-container" style="margin-top: 2.5em;">
-            <img src="IMG_4004.jpeg" alt="Stav Reuven with painting" class="hero-img">
+            <!-- Placeholder Image for Demo -->
+            <img src="IMG_4004.jpeg" alt="Stav Reuven" class="hero-img">
         </div>
         <div class="hero-content">
             <h1>A Suicide Survivor's Guide</h1>
             <p>Dedicated to the loved ones of Stav Reuven
-            <abc class="heart-icon">♥</abc></p>
+            <span class="heart-icon">♥</span></p>
         </div>
     </section>
 
-    <!-- INTRO TEXT -->
-    <div class="intro-text hidden">
-        <h2>Suicide loss often brings unique grief challenges, which can include feelings of guilt.</h2>
-        <p>These resources may help you as you move through your healing process.</p>
-    </div>
-
     <!-- SURVIVOR'S GUIDE (ACCORDION) -->
-    <section id="guide" class="guide-section hidden">
+    <section id="guide" class="guide-section">
+        
+        <!-- Moved Intro Text Inside Guide Section -->
+        <div class="intro-text">
+            <h2>Suicide loss often brings unique grief challenges, which can include feelings of guilt.</h2>
+            <p>These resources may help you as you move through your healing process.</p>
+        </div>
         
         <!-- Accordion Item 1 -->
         <div class="accordion-item">
@@ -468,10 +521,8 @@
                     <p>For those who are grieving the loss of a loved one from suicide, creating a self-care plan is crucial as you navigate these complex feelings. Brought to you by the National Council for Mental Wellbeing.</p>
                     <br>
                     <div style="background: white; padding: 1rem; border-radius: 4px; text-align: center;">
-                        <!-- <strong>Think about:</strong> Physical, Emotional, Spiritual, and Intellectual care. -->
-                        <!-- <br><br> -->
-                        <!-- <em>"How do you know when you need self-care?"</em> -->
-                        <embed src="Self-Care Plan.pdf" width="700" height="575" type="application/pdf">
+                        <embed src="Self-Care Plan.pdf" width="100%" height="500" type="application/pdf">
+                        <p style="font-size: 0.8rem; margin-top: 10px;"><a href="Self-Care Plan.pdf" target="_blank">Click here to download PDF</a></p>
                     </div>
                 </div>
             </div>
@@ -512,7 +563,7 @@
                             <li>The willingness to laugh with others and at yourself is healing.</li>
                             <li>Wear out your questions, anger, guilt, or other feelings until you can let them go. Letting go doesn’t mean forgetting.</li>
                             <li>Know that you will never be the same again, but you can survive and even go beyond just surviving.</li>
-                            Dunne, McIntosh, Dunne-Maxim, Norton et al., 1987
+                            <li>Dunne, McIntosh, Dunne-Maxim, Norton et al., 1987</li>
                         </ul>
                     </div>
                 </div>
@@ -522,7 +573,7 @@
     </section>
 
     <!-- LIFELINES SECTION -->
-    <section id="lifelines" class="lifelines-section hidden">
+    <section id="lifelines" class="lifelines-section">
         <h2>If you or a loved one are in crisis, here are a list of numbers you can call or text.</h2>
         
         <div class="lifelines-grid">
@@ -553,11 +604,25 @@
                 <p>800-852-8336</p>
                 <p>Text TEEN to 839863</p>
             </div>
+            <div class="lifeline-card">
+                <h3>NATIONAL HOPELINE HOTLINE</h3>
+                <p>1-800-442-HOPE (4673)</p>
+            </div>
+            <div class="lifeline-card">
+                <h3>MILITARY HELPLINE</h3>
+                <p>1-888-457-4838</p>
+                <p>Text MIL1 to 839863</p>
+            </div>
+            <div class="lifeline-card">
+                <h3>NATIONAL MATERNAL MENTAL HEALTH</h3>
+                <p>1-833-852-6262</p>
+            </div>
+            
         </div>
     </section>
 
     <!-- MEMORY WALL SECTION -->
-    <section id="moon" class="memory-section hidden">
+    <section id="moon" class="memory-section">
         <div class="memory-desc">
             <h1>TO ALL THE LOVED ONES OF STAV, PLEASE ADD BELOW A FAVORITE MEMORY YOU HAVE WITH HER!</h1>
             
@@ -580,38 +645,70 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- SCROLL ANIMATION OBSERVER ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('show');
-                }
+        // --- 1. SINGLE PAGE NAVIGATION LOGIC ---
+        
+        const navLinks = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('section');
+
+        function switchSection(targetId) {
+            // 1. Hide all sections
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 2. Remove active class from nav links
+            navLinks.forEach(link => {
+                link.classList.remove('active-link');
+            });
+
+            // 3. Show target section
+            // Handle if targetId is #home (special grid case handled in CSS by #home.active)
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo(0, 0); // Scroll to top
+            }
+
+            // 4. Highlight Nav
+            const activeLink = document.querySelector(`a[href="${targetId}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active-link');
+            }
+        }
+
+        // Add Click Events
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                switchSection(targetId);
+                
+                // Optional: Update URL hash without jumping
+                history.pushState(null, null, targetId);
             });
         });
 
-        const hiddenElements = document.querySelectorAll('.hidden');
-        hiddenElements.forEach((el) => observer.observe(el));
+        // Initialize Page
+        const initialHash = window.location.hash;
+        if (initialHash && document.querySelector(initialHash)) {
+            switchSection(initialHash);
+        } else {
+            switchSection('#home');
+        }
 
-        // --- ACCORDION LOGIC ---
+
+        // --- 2. ACCORDION LOGIC ---
         const accordions = document.querySelectorAll('.accordion-header');
 
         accordions.forEach(acc => {
             acc.addEventListener('click', function() {
                 const item = this.parentElement;
-                
-                // Toggle active class
                 item.classList.toggle('active');
-                
-                // Optional: Close others when one opens (Auto-collapse)
-                // document.querySelectorAll('.accordion-item').forEach(i => {
-                //     if(i !== item) i.classList.remove('active');
-                // });
             });
         });
 
-        // --- TABS LOGIC ---
+        // --- 3. TABS LOGIC ---
         function openTab(evt, tabName) {
-            // Hide all tab contents
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
@@ -619,18 +716,16 @@
                 tabcontent[i].classList.remove("active");
             }
 
-            // Remove active class from buttons
             tablinks = document.getElementsByClassName("tab-btn");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
 
-            // Show current tab and add active class
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
 
-        // --- MEMORY WALL LOGIC ---
+        // --- 4. MEMORY WALL LOGIC ---
         function addMemory() {
             const input = document.getElementById('memoryText');
             const wall = document.getElementById('wallDisplay');
