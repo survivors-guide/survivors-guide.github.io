@@ -18,28 +18,24 @@
             --card-border: 1px solid rgba(255, 255, 255, 0.6);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         body {
             font-family: 'Open Sans', sans-serif;
             background: linear-gradient(180deg, var(--bg-gradient-top) 0%, var(--bg-gradient-bottom) 100%);
             color: var(--text-dark);
             line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
-
         h1, h2, h3, h4 {
             font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         ul { list-style: none; }
 
@@ -55,14 +51,12 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
         .nav-links {
             display: flex;
             gap: 2rem;
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .nav-item {
             font-size: 0.85rem;
             font-weight: 600;
@@ -71,7 +65,6 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
         .nav-item:hover, .nav-item.active-link {
             background: rgba(255,255,255,0.3);
             border-color: rgba(255,255,255,0.5);
@@ -79,42 +72,24 @@
         }
 
         /* --- VISIBILITY / SECTION LOGIC --- */
-        
-        /* 1. Hide all main sections by default */
         section {
             display: none;
             opacity: 0;
             animation: fadeIn 0.6s ease-forwards;
         }
-
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
-
-        /* 2. Display Logic for Active Sections */
-        
-        /* Default Block display for Guide & Lifelines */
-        section.active {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Specific Grid display for Home & Moon */
-        section#home.active {
-            display: grid;
-        }
-        section#moon.active {
-            display: grid;
-        }
-
+        section.active { display: block; opacity: 1; }
+        section#home.active { display: grid; }
+        section#moon.active { display: grid; }
 
         /* --- HERO SECTION (HOME) --- */
         .hero {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 2rem;
-            /* Note: display: grid is applied via #home.active above */
             grid-template-columns: 1fr 1fr;
             gap: 3rem;
             align-items: center;
@@ -123,7 +98,6 @@
             border-radius: 8px;
             box-shadow: var(--shadow);
         }
-
         .hero-img {
             width: 100%;
             height: auto;
@@ -131,26 +105,10 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform 0.5s ease;
         }
-
-        .hero-img:hover {
-            transform: scale(1.02);
-        }
-
-        .hero-content h1 {
-            font-size: 3rem;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .heart-icon {
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
-        }
+        .hero-img:hover { transform: scale(1.02); }
+        .hero-content h1 { font-size: 3rem; line-height: 1.1; margin-bottom: 1rem; }
+        .hero-content p { font-size: 1.2rem; margin-bottom: 1rem; }
+        .heart-icon { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
 
         /* --- INTRO TEXT --- */
         .intro-text {
@@ -158,19 +116,51 @@
             max-width: 800px;
             margin: 4rem auto;
             padding: 0 1rem;
+            position: relative; 
+            z-index: 2;
         }
-        .intro-text h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
+        .intro-text h2 { font-size: 1.8rem; margin-bottom: 1rem; }
 
-        /* --- SURVIVOR'S GUIDE (ACCORDION) --- */
+        /* --- SURVIVOR'S GUIDE (ACCORDION) & FIXED STARS --- */
         .guide-section {
             max-width: 1000px;
             margin: 0 auto 5rem auto;
             padding: 0 1rem;
+            /* No longer needs relative positioning for stars, 
+               as stars are now fixed to viewport */
         }
 
+        /* FIXED STARS CONTAINER */
+        /* This keeps stars stuck to the screen background */
+        .star-container {
+            position: fixed; /* KEY CHANGE: Fixed instead of Absolute */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; 
+            z-index: -1; 
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute; /* Positioned inside the fixed container */
+            color: #fff280; 
+            text-shadow: 0 0 10px #ffee00, 0 0 20px #ffea00;
+            font-family: sans-serif;
+            opacity: 0.8;
+            animation: float 4s ease-in-out infinite alternate;
+        }
+        .star.small { font-size: 15px; animation-duration: 3s; }
+        .star.medium { font-size: 25px; animation-duration: 5s; }
+        .star.large { font-size: 35px; animation-duration: 7s; }
+
+        @keyframes float {
+            from { transform: translateY(0) scale(1); opacity: 0.7; }
+            to { transform: translateY(-10px) scale(1.2); opacity: 1; }
+        }
+
+        /* ACCORDION STYLES */
         .accordion-item {
             margin-bottom: 1rem;
             border: 1px solid rgba(0,0,0,0.1);
@@ -178,8 +168,9 @@
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
+            background: rgba(255,255,255,0.4); 
+            backdrop-filter: blur(5px);
         }
-
         .accordion-header {
             background: rgba(137, 176, 250, 0.4);
             padding: 1.5rem;
@@ -190,43 +181,25 @@
             font-weight: 700;
             transition: background 0.3s;
         }
-
-        .accordion-header:hover {
-            background: rgba(137, 176, 250, 0.6);
-        }
-
-        .accordion-icon {
-            font-size: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-
+        .accordion-header:hover { background: rgba(137, 176, 250, 0.6); }
+        .accordion-icon { font-size: 1.5rem; transition: transform 0.3s ease; }
         .accordion-content {
             background: rgba(255,255,255,0.3);
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
         }
+        .accordion-body { padding: 2rem; }
+        .accordion-item.active .accordion-content { max-height: 1000px; }
+        .accordion-item.active .accordion-icon { transform: rotate(45deg); }
 
-        .accordion-body {
-            padding: 2rem;
-        }
-
-        .accordion-item.active .accordion-content {
-            max-height: 1000px; /* Arbitrary large height */
-        }
-        
-        .accordion-item.active .accordion-icon {
-            transform: rotate(45deg);
-        }
-
-        /* Tabs inside Accordion */
+        /* TABS INSIDE ACCORDION */
         .tab-container {
             display: flex;
             gap: 1rem;
             margin-bottom: 1.5rem;
             border-bottom: 1px solid rgba(0,0,0,0.1);
         }
-
         .tab-btn {
             background: none;
             border: none;
@@ -238,54 +211,28 @@
             transition: 0.3s;
             border-bottom: 3px solid transparent;
         }
-
-        .tab-btn.active {
-            opacity: 1;
-            border-bottom-color: var(--text-dark);
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
+        .tab-btn.active { opacity: 1; border-bottom-color: var(--text-dark); }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
         .tab-content.active { display: block; }
 
-        /* --- UPDATED LIST BOX (SCROLLABLE) --- */
+        /* LIST BOX (SCROLLABLE) */
         .list-box {
             background: rgba(255,255,255,0.5);
             padding: 1.5rem;
             border-radius: 4px;
             border: 1px solid rgba(0,0,0,0.05);
-            /* SCROLL PROPERTIES */
             max-height: 15.5rem; 
             overflow-y: auto;    
             padding-right: 8px;  
         }
-        
-        .list-box ul {
-            margin: 0;
-            padding-left: 20px; 
-            list-style: none; /* Reset logic handled below */
-        }
-        
         .list-box ul li {
             margin-bottom: 0.5rem;
             padding-left: 1rem;
             border-left: 3px solid var(--primary-blue);
         }
-
-        /* Custom Scrollbar for List Box */
-        .list-box::-webkit-scrollbar {
-            width: 8px;
-        }
-        .list-box::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-            border-radius: 4px;
-        }
-        .list-box::-webkit-scrollbar-thumb {
-            background: var(--primary-blue);
-            border-radius: 4px;
-        }
+        .list-box::-webkit-scrollbar { width: 8px; }
+        .list-box::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 4px; }
+        .list-box::-webkit-scrollbar-thumb { background: var(--primary-blue); border-radius: 4px; }
 
         /* --- LIFELINES (GRID) --- */
         .lifelines-section {
@@ -293,7 +240,6 @@
             padding: 4rem 1rem;
             text-align: center;
         }
-
         .lifelines-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -301,7 +247,6 @@
             max-width: 1200px;
             margin: 3rem auto;
         }
-
         .lifeline-card {
             background: #9abefc;
             padding: 2.5rem 1.5rem;
@@ -314,40 +259,28 @@
             align-items: center;
             min-height: 200px;
         }
-
         .lifeline-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.15);
             background: #89b0fa;
         }
-
-        .lifeline-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .lifeline-card p {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
+        .lifeline-card h3 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .lifeline-card p { font-weight: 700; font-size: 1.1rem; }
 
         /* --- MEMORY WALL --- */
         .memory-section {
             max-width: 1200px;
             margin: 4rem auto;
             padding: 2rem;
-            /* Note: display: grid is applied via #moon.active above */
             grid-template-columns: 1fr 2fr;
             gap: 3rem;
         }
-
         .memory-input-container {
             background: #9abefc;
             padding: 2rem;
             border-radius: 12px;
             border: 1px solid #333;
         }
-
         .memory-input-container textarea {
             width: 100%;
             height: 200px;
@@ -360,12 +293,6 @@
             resize: none;
             border-radius: 4px;
         }
-        
-        .memory-input-container textarea::placeholder {
-            color: rgba(0,0,0,0.5);
-            font-style: italic;
-        }
-
         .post-btn {
             background: transparent;
             border: 2px solid #333;
@@ -375,12 +302,7 @@
             transition: all 0.3s;
             text-transform: uppercase;
         }
-
-        .post-btn:hover {
-            background: #333;
-            color: #fff;
-        }
-
+        .post-btn:hover { background: #333; color: #fff; }
         .wall-display {
             background: rgba(255,255,255,0.25);
             border: 1px solid #333;
@@ -391,7 +313,6 @@
             align-content: flex-start;
             gap: 1rem;
         }
-
         .sticky-note {
             background: #fff9c4;
             color: #333;
@@ -405,11 +326,8 @@
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow-y: auto;
         }
-
-        .sticky-note:nth-child(even) {
-            background: #e1f5fe;
-            transform: rotate(2deg);
-        }
+        .sticky-note:nth-child(even) { background: #e1f5fe; transform: rotate(2deg); }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1) rotate(-2deg); } }
 
         /* --- FOOTER --- */
         footer {
@@ -417,31 +335,22 @@
             padding: 2rem;
             font-size: 0.8rem;
             opacity: 0.7;
-            /* position: fixed; */
             bottom: 0;
             width: 100%;
-            pointer-events: none; /* Lets you click through to content behind it if needed */
+            pointer-events: none;
         }
-
-        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1) rotate(-2deg); } }
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            /* Force Grid to single column on mobile */
             section#home.active { display: grid; grid-template-columns: 1fr; text-align: center; }
             section#moon.active { display: grid; grid-template-columns: 1fr; }
-            
             .nav-links { gap: 1rem; }
             .hero-content h1 { font-size: 2rem; }
-            
-            /* Unfix footer on small screens if content is long */
             footer { position: relative; }
         }
     </style>
 </head>
 <body>
-
-    <!-- NAVIGATION -->
     <nav>
         <div class="nav-links">
             <a href="#home" class="nav-item">HOME</a>
@@ -451,11 +360,8 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION (HOME) -->
-    <!-- Added ID 'home' and class 'hero' -->
     <section id="home" class="hero">
         <div class="hero-img-container" style="margin-top: 2.5em;">
-            <!-- Placeholder Image for Demo -->
             <img src="IMG_4004.jpeg" alt="Stav Reuven" class="hero-img">
         </div>
         <div class="hero-content">
@@ -465,16 +371,30 @@
         </div>
     </section>
 
-    <!-- SURVIVOR'S GUIDE (ACCORDION) -->
     <section id="guide" class="guide-section">
         
-        <!-- Moved Intro Text Inside Guide Section -->
+        <div class="star-container">
+            <span class="star medium" style="top: 5%; left: 10%;">★</span>
+            <span class="star small" style="top: 12%; left: 5%;">★</span>
+            <span class="star large" style="top: 8%; left: 18%;">★</span>
+            
+            <span class="star medium" style="top: 4%; left: 80%;">★</span>
+            <span class="star small" style="top: 15%; left: 90%;">★</span>
+            <span class="star large" style="top: 10%; left: 70%;">★</span>
+            
+            <span class="star small" style="top: 25%; left: 15%;">★</span>
+            <span class="star medium" style="top: 40%; left: 8%;">★</span>
+            <span class="star small" style="top: 30%; left: 85%;">★</span>
+            <span class="star medium" style="top: 50%; left: 92%;">★</span>
+            
+            <span class="star small" style="top: 80%; left: 12%;">★</span>
+            <span class="star medium" style="top: 85%; left: 88%;">★</span>
+        </div>
         <div class="intro-text">
             <h2>Suicide loss often brings unique grief challenges, which can include feelings of guilt.</h2>
             <p>These resources may help you as you move through your healing process.</p>
         </div>
         
-        <!-- Accordion Item 1 -->
         <div class="accordion-item">
             <div class="accordion-header">
                 <span>SUPPORT GROUPS</span>
@@ -487,30 +407,28 @@
                         <button class="tab-btn" onclick="openTab(event, 'healing')">Healing Conversations</button>
                         <button class="tab-btn" onclick="openTab(event, 'kara')">Kara Peer Support</button>
                     </div>
-
                     <div id="local" class="tab-content active">
                         <h4>Local Support Groups in the Bay Area:</h4>
                         <p>If speaking with others who have lost loved ones by suicide will feel beneficial to your grief, there are options in the South Bay to pursue this, particularly in Saratoga, California.</p>
                         <br>
                         <a href="https://afsp.org" target="_blank" style="text-decoration: underline;">Visit American Foundation for Suicide Prevention</a>
                     </div>
-
                     <div id="healing" class="tab-content">
                         <h4>Healing Conversations</h4>
                         <p>Healing Conversations gives survivors of suicide loss the opportunity to speak with volunteers, who are themselves survivors of suicide loss.</p>
                         <br>
+                        <a href="https://forms.monday.com/forms/e1c77ab1a2caa245f722e644c0d66404?r=use1" target="_blank" style="text-decoration: underline;">Form to request a visit</a>
                         <p><em>Available in person, on the phone, or by video chat.</em></p>
                     </div>
-
                     <div id="kara" class="tab-content">
                         <h4>Kara Peer Support</h4>
                         <p>Located in Palo Alto, California. Kara provides grief support to children, youth, adults, and families. They offer one-on-one peer support by a trained volunteer.</p>
+                        <br>
+                        <a href="https://kara-grief.org/services/peer-support/" target="_blank" style="text-decoration: underline;">Visit Kara Peer Support</a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Accordion Item 2 -->
         <div class="accordion-item">
             <div class="accordion-header">
                 <span>SELF CARE PLAN</span>
@@ -527,8 +445,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Accordion Item 3 -->
         <div class="accordion-item">
             <div class="accordion-header">
                 <span>AFFIRMING STATEMENTS</span>
@@ -569,10 +485,8 @@
                 </div>
             </div>
         </div>
-
     </section>
 
-    <!-- LIFELINES SECTION -->
     <section id="lifelines" class="lifelines-section">
         <h2>If you or a loved one are in crisis, here are a list of numbers you can call or text.</h2>
         
@@ -617,11 +531,9 @@
                 <h3>NATIONAL MATERNAL MENTAL HEALTH</h3>
                 <p>1-833-852-6262</p>
             </div>
-            
         </div>
     </section>
 
-    <!-- MEMORY WALL SECTION -->
     <section id="moon" class="memory-section">
         <div class="memory-desc">
             <h1>TO ALL THE LOVED ONES OF STAV, PLEASE ADD BELOW A FAVORITE MEMORY YOU HAVE WITH HER!</h1>
@@ -631,9 +543,7 @@
                 <button class="post-btn" onclick="addMemory()">POST MEMORY</button>
             </div>
         </div>
-
         <div class="wall-display" id="wallDisplay">
-            <!-- Memories will appear here -->
             <div class="sticky-note">"Her art always brightened up the room. We miss you."</div>
             <div class="sticky-note">"I remember the day we painted the stars."</div>
         </div>
@@ -643,52 +553,38 @@
         <p>© 2025 A Suicide Survivor's Guide. Created with love.</p>
     </footer>
 
-    <!-- JAVASCRIPT LOGIC -->
     <script>
         // --- 1. SINGLE PAGE NAVIGATION LOGIC ---
-        
         const navLinks = document.querySelectorAll('.nav-item');
         const sections = document.querySelectorAll('section');
 
         function switchSection(targetId) {
-            // 1. Hide all sections
             sections.forEach(section => {
                 section.classList.remove('active');
             });
-
-            // 2. Remove active class from nav links
             navLinks.forEach(link => {
                 link.classList.remove('active-link');
             });
-
-            // 3. Show target section
-            // Handle if targetId is #home (special grid case handled in CSS by #home.active)
             const targetSection = document.querySelector(targetId);
             if (targetSection) {
                 targetSection.classList.add('active');
-                window.scrollTo(0, 0); // Scroll to top
+                window.scrollTo(0, 0); 
             }
-
-            // 4. Highlight Nav
             const activeLink = document.querySelector(`a[href="${targetId}"]`);
             if (activeLink) {
                 activeLink.classList.add('active-link');
             }
         }
 
-        // Add Click Events
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
                 switchSection(targetId);
-                
-                // Optional: Update URL hash without jumping
                 history.pushState(null, null, targetId);
             });
         });
 
-        // Initialize Page
         const initialHash = window.location.hash;
         if (initialHash && document.querySelector(initialHash)) {
             switchSection(initialHash);
@@ -696,10 +592,8 @@
             switchSection('#home');
         }
 
-
         // --- 2. ACCORDION LOGIC ---
         const accordions = document.querySelectorAll('.accordion-header');
-
         accordions.forEach(acc => {
             acc.addEventListener('click', function() {
                 const item = this.parentElement;
@@ -715,12 +609,10 @@
                 tabcontent[i].style.display = "none";
                 tabcontent[i].classList.remove("active");
             }
-
             tablinks = document.getElementsByClassName("tab-btn");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
         }
@@ -736,19 +628,14 @@
                 return;
             }
 
-            // Create new sticky note
             const note = document.createElement('div');
             note.classList.add('sticky-note');
             note.innerText = text;
-
-            // Random slight rotation for natural feel
+            
             const randomRot = Math.floor(Math.random() * 6) - 3; 
             note.style.transform = `rotate(${randomRot}deg)`;
-
-            // Add to wall
+            
             wall.prepend(note);
-
-            // Clear input
             input.value = "";
         }
     </script>
